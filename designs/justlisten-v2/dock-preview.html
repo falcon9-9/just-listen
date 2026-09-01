@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh"><head><meta charset="UTF-8">
+<title>控制器形态对比 · JustListen</title>
+<style>
+:root{
+  --jl-glass-hi:rgba(255,255,255,.10);
+  --jl-stroke:rgba(255,255,255,.20);
+  --jl-stroke-soft:rgba(255,255,255,.12);
+  --jl-text:rgba(255,255,255,.94);
+  --jl-text-2:rgba(255,255,255,.62);
+  --jl-shadow:0 8px 30px rgba(0,0,0,.28), 0 2px 8px rgba(0,0,0,.18);
+  --ease:cubic-bezier(.22,.61,.36,1); --ease-out:cubic-bezier(.16,1,.3,1);
+  --font:-apple-system,BlinkMacSystemFont,"SF Pro Text","PingFang SC","Noto Sans SC",sans-serif;
+}
+*{box-sizing:border-box;} body{margin:0;background:#0f1115;color:#e8eaed;font-family:var(--font);padding:40px;}
+h1{font-size:18px;font-weight:600;margin:0 0 4px;}
+.sub{color:#8a9099;font-size:13px;margin-bottom:28px;}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;}
+.cell{background:#16181d;border:1px solid #23262c;border-radius:16px;padding:18px;}
+.cap{font-size:14px;font-weight:600;margin:0 0 2px;}
+.cap em{font-style:normal;color:#0A84FF;font-size:12px;margin-left:6px;}
+.desc{color:#8a9099;font-size:11.5px;line-height:1.5;min-height:48px;margin-bottom:14px;}
+.rowlabel{color:#6a707a;font-size:10.5px;letter-spacing:.5px;text-transform:uppercase;margin:14px 0 8px;}
+/* a mini "video" tile the dock sits on */
+.tile{position:relative;height:150px;border-radius:12px;overflow:hidden;
+  background:linear-gradient(180deg,#123 0%,#0c2436 42%,#0a1c2b 100%);}
+.tile::after{content:"";position:absolute;inset:0;
+  background:radial-gradient(90px 90px at 30% 40%,rgba(255,214,120,.4),transparent 60%),radial-gradient(60px 60px at 74% 60%,rgba(255,170,90,.35),transparent 60%);}
+
+/* ===== dock styles (copied from JustListen.html) ===== */
+.jl-dock{position:absolute;right:0;top:50%;transform:translateY(-50%);z-index:5;display:flex;flex-direction:column;align-items:center;}
+.dk-btn{position:relative;display:grid;place-items:center;color:var(--jl-text);border:none;background:none;transition:background .18s var(--ease),color .18s var(--ease);}
+.v-rail{gap:2px;padding:4px;border-radius:12px 0 0 12px;background:rgba(28,30,38,.4);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);border:1px solid var(--jl-stroke);border-right:none;box-shadow:var(--jl-shadow);}
+.v-rail .dk-btn{width:29px;height:29px;border-radius:8px;}
+.v-rail .dk-btn.on{background:#fff;color:#111;}
+.v-tab{border-radius:11px 0 0 11px;overflow:hidden;background:rgba(28,30,38,.44);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);border:1px solid var(--jl-stroke);border-right:none;box-shadow:var(--jl-shadow);}
+.v-tab .dk-btn{width:32px;height:32px;}
+.v-tab .dk-btn+.dk-btn{border-top:1px solid var(--jl-stroke-soft);}
+.v-tab .dk-btn.on{background:#fff;color:#111;}
+.jl-dock.v-ghost{right:9px;gap:8px;}
+.v-ghost .dk-btn{width:33px;height:33px;border-radius:50%;background:rgba(28,30,38,.42);backdrop-filter:blur(18px) saturate(180%);-webkit-backdrop-filter:blur(18px) saturate(180%);border:1px solid var(--jl-stroke);box-shadow:var(--jl-shadow);}
+.v-ghost .dk-btn.on{background:#fff;color:#111;}
+.v-dot .dk-grip{width:20px;height:46px;border-radius:10px 0 0 10px;background:rgba(28,30,38,.46);backdrop-filter:blur(18px) saturate(180%);-webkit-backdrop-filter:blur(18px) saturate(180%);border:1px solid var(--jl-stroke);border-right:none;display:grid;place-items:center;color:var(--jl-text-2);box-shadow:var(--jl-shadow);}
+.v-dot .dk-pop{position:absolute;right:0;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:2px;padding:4px;border-radius:12px 0 0 12px;background:rgba(28,30,38,.5);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);border:1px solid var(--jl-stroke);border-right:none;box-shadow:var(--jl-shadow);}
+.v-dot .dk-btn{width:29px;height:29px;border-radius:8px;}
+.v-dot .dk-btn.on{background:#fff;color:#111;}
+.icon{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;}
+.brand{width:15px;height:15px;}
+</style></head>
+<body>
+<h1>控制器形态 · 4 版对比</h1>
+<div class="sub">吸附播放器右缘 · 收起只保留 别看字（遮罩）与 字幕列表 两枚 17px 图标 · 静止半隐，悬停提亮。下排为“已开遮罩 / 已开面板”的激活态。</div>
+<div class="grid" id="grid"></div>
+
+<script>
+const eyeOff='<path d="M3 3l18 18"/><path d="M10.6 5.1A9.7 9.7 0 0 1 12 5c5 0 9 5 9 7a12.3 12.3 0 0 1-2.2 2.7"/><path d="M6.5 6.6C3.9 8.1 3 11 3 12c0 2 4 7 9 7a9.6 9.6 0 0 0 3.6-.7"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/>';
+const list='<line x1="8" y1="7" x2="20" y2="7"/><line x1="8" y1="12" x2="20" y2="12"/><line x1="8" y1="17" x2="15" y2="17"/><circle cx="4" cy="7" r="1" fill="currentColor" stroke="none"/><circle cx="4" cy="12" r="1" fill="currentColor" stroke="none"/><circle cx="4" cy="17" r="1" fill="currentColor" stroke="none"/>';
+const brand='<circle cx="12" cy="12" r="9"/><path d="M8.5 12a3.5 3.5 0 0 1 7 0"/><circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none"/>';
+const svg=(p,cls='icon')=>`<svg class="${cls}" viewBox="0 0 24 24">${p}</svg>`;
+const btn=(p,on)=>`<button class="dk-btn${on?' on':''}">${svg(p)}</button>`;
+
+function dockHTML(v, maskOn, panelOn){
+  const m=btn(eyeOff, maskOn), l=btn(list, panelOn);
+  if(v==='ghost') return `<div class="jl-dock v-ghost">${m}${l}</div>`;
+  if(v==='tab')   return `<div class="jl-dock v-tab">${m}${l}</div>`;
+  if(v==='dot')   return `<div class="jl-dock v-dot"><div class="dk-pop">${m}${l}</div></div>`;
+  return `<div class="jl-dock v-rail">${m}${l}</div>`;
+}
+function gripHTML(){ return `<div class="jl-dock v-dot"><div class="dk-grip">${svg(brand,'icon brand')}</div></div>`; }
+
+const defs=[
+  {v:'rail', name:'细轨', tag:'rail', desc:'极窄毛玻璃竖轨，两枚小图标上下排。最接近“工具条”的直觉，状态一眼可见。'},
+  {v:'tab', name:'书签条', tag:'tab', desc:'贴边圆角小条，两格无缝相接，宽度最小。像浏览器侧边书签，安静。'},
+  {v:'ghost', name:'独立圆点', tag:'ghost', desc:'两颗独立毛玻璃圆钮，中间留白。最轻盈、最“苹果”，无外框负担。'},
+  {v:'dot', name:'点·展开', tag:'dot', desc:'收起只剩一枚品牌小点，悬停才弹出两枚图标。最隐形，代价是状态需展开才见。'},
+];
+const grid=document.getElementById('grid');
+grid.innerHTML=defs.map(d=>`
+  <div class="cell">
+    <div class="cap">${d.name}<em>${d.tag}</em></div>
+    <div class="desc">${d.desc}</div>
+    <div class="rowlabel">静止态</div>
+    <div class="tile">${d.v==='dot'?gripHTML():dockHTML(d.v,false,false)}</div>
+    <div class="rowlabel">激活态（遮罩开 · 面板开）</div>
+    <div class="tile">${dockHTML(d.v,true,true)}</div>
+  </div>`).join('');
+</script>
+</body></html>
