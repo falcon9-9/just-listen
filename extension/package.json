@@ -1,0 +1,31 @@
+{
+  "name": "justlisten-extension",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "build": "vite build && vite build --config vite.ocr.config.ts",
+    "dev": "vite build --watch",
+    "dev:ocr": "vite build --config vite.ocr.config.ts --watch",
+    "verify:language-router": "tsx scripts/verify-language-router.ts",
+    "typecheck": "tsc --noEmit",
+    "check": "npm run typecheck && npm run verify:language-router && npm run build"
+  },
+  "dependencies": {
+    "@paddleocr/paddleocr-js": "0.4.2",
+    "onnxruntime-web": "1.22.0",
+    "react": "19.2.8",
+    "react-dom": "19.2.8"
+  },
+  "devDependencies": {
+    "@types/chrome": "0.2.7",
+    "@types/node": "26.4.0",
+    "@types/react": "19.2.18",
+    "@types/react-dom": "19.2.5",
+    "@vitejs/plugin-react": "6.1.1",
+    "tsx": "^4.23.13",
+    "typescript": "7.0.2",
+    "vite": "8.2.2",
+    "vite-plugin-static-copy": "^4.1.1"
+  }
+}

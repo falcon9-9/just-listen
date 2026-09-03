@@ -1,0 +1,26 @@
+{
+  "manifest_version": 3,
+  "name": "别看字 / JustListen",
+  "version": "0.1.0",
+  "description": "在你本来就在看的视频里，顺手练听力。",
+  "permissions": ["storage"],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; worker-src 'self'; object-src 'self'"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.bilibili.com/video/*",
+        "https://www.bilibili.com/bangumi/play/*"
+      ],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["ocr/*", "ocr/ort/*"],
+      "matches": ["https://www.bilibili.com/*"]
+    }
+  ]
+}
